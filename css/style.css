@@ -1,0 +1,216 @@
+@font-face {
+  font-family: 'Terminal Dosis';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Dosis Regular'), local('Dosis-Regular'), url('../fonts/terminal-dosis-regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Varela Round';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Varela Round'), local('VarelaRound-Regular'), url('../fonts/varela-round.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Terminal Dosis';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Dosis SemiBold'), local('Dosis-SemiBold'), url('../fonts/terminal-dosis-semibold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Terminal Dosis';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Dosis Bold'), local('Dosis-Bold'), url('../fonts/terminal-dosis-bold.woff') format('woff');
+}
+
+* {
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+canvas {
+  display: none;
+}
+
+html {
+  height: 100%;
+  background-color: hsl(0, 0%, 13%);
+}
+
+body {
+  background-color: hsl(0, 0%, 13%);
+  color: hsl(0, 0%, 53%);
+
+  opacity: 0;
+
+  font: 16px/1.625em 'Varela Round';
+
+  padding: 20px;
+}
+
+label {
+  font-size: 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-align: center;
+
+  font-size: 50px;
+  font-family: 'Terminal Dosis';
+  color: white;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 72px;
+  line-height: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+input, button {
+  position: relative;
+  top: 2px;
+
+  -webkit-user-select: text;
+
+  height: 40px;
+
+  font-size: 30px;
+
+  border: 2px solid hsl(0, 0%, 25%);
+  background-color: hsl(0, 0%, 48%);
+  
+  -webkit-transition: all 0.5s;
+  -webkit-transition-timing-function: ease-in-out;
+
+  border-radius: 10px;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+  border-color: 2px solid hsl(0, 0%, 25%);
+  background-color: hsl(0, 0%, 48%);
+}
+
+#background {
+  z-index: -1;
+  position: absolute;
+}
+
+#user-list {
+  width: 500px;
+
+  border-radius: 20px;
+  padding: 10px;
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.user {
+  line-height: 37px;
+
+  overflow: hidden;
+
+  border-radius: 20px;
+  height: 60px;
+
+  background-color: hsl(0, 0%, 7%);
+  -webkit-transition: all 0.5s;
+
+  cursor: pointer;
+
+  opacity: 0.7;
+}
+
+.user:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.user:hover {
+  opacity: 0.85;
+}
+
+.user.active {
+  height: 145px;
+  opacity: 1;
+}
+
+.user img {
+  display: none;
+}
+
+.user .user-name {
+  margin-top: 13px;
+  margin-bottom: 5px;
+  font-size: 50px;
+  font-family: 'Terminal Dosis';
+  color: white;
+  font-weight: 600;
+}
+
+.user .user-logged-in {
+  display: inline-block;
+
+  font-size: 20px;
+  color: hsl(0, 0%, 70%);
+  font-style: italic;
+  vertical-align: middle;
+
+  margin-left: 10px;
+}
+
+.user .left-bubble {
+  float: left;
+  
+  display: inline-block;
+  width: 40px;
+  height: 100%;
+  background-color: hsl(175, 29%, 61%);
+
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+
+  margin-right: 10px;
+  -webkit-transition: all 0.5s;
+  -webkit-transition-timing-function: ease-in-out;
+}
+
+#controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  overflow: hidden;
+  text-align: center;
+}
+
+.system-button {
+  position: relative;
+  bottom: -10px;
+
+  opacity: 0.65;
+
+  height: 35px;
+  display: inline-block;
+  
+  color: black;
+  cursor: pointer;
+
+  padding: 10px;
+
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+
+  margin-right: 10px;
+  -webkit-transition: all 0.3s;
+  -webkit-transition-timing-function: ease-in-out;
+}
+
+.system-button:hover {
+  bottom: 0;
+  opacity: 1;
+}

@@ -1,0 +1,6 @@
+[theme]
+name=Test Theme
+description=Test Webkit Theme
+engine=lightdm-webkit-greeter
+url=index.html
+session=gnome
