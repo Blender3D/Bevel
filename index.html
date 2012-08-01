@@ -1,6 +1,7 @@
 <html>
   <head>
     <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.mousewheel.js"></script>
     <script src="js/quantize.js"></script>
     <script src="js/color-thief.js"></script>
     <script src="js/dummy.js"></script>
@@ -10,9 +11,14 @@
   </head>
 
   <body>
-    <h1>Login to <span id="hostname">hostname</span></h1>
-    <div id="user-list">
+    <!--<h1>Login to <span id="hostname">hostname</span></h1>-->
+    <div id="user-list-wrapper">
+      <div id="user-list" data-shift="0"></div>
+    </div>
 
+    <div id="password-container" class="hidden">
+      <input id="password" type="password" />
+      <div id="authentication-message">Invalid password, please try again</div>
     </div>
 
     <div id="controls">

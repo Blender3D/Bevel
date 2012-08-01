@@ -26,6 +26,7 @@
   src: local('Dosis Bold'), local('Dosis-Bold'), url('../fonts/terminal-dosis-bold.woff') format('woff');
 }
 
+
 * {
   -webkit-user-select: none;
   -webkit-user-drag: none;
@@ -41,14 +42,35 @@ html {
 }
 
 body {
-  background-color: hsl(0, 0%, 13%);
   color: hsl(0, 0%, 53%);
 
   opacity: 0;
 
   font: 16px/1.625em 'Varela Round';
+}
 
-  padding: 20px;
+#user-list-wrapper {
+  position: absolute;
+  
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  overflow: hidden;
+}
+
+#authentication-message {
+  opacity: 0;
+  -webkit-transition: all 0.3s;
+}
+
+#authentication-message.error {
+  color: hsl(359, 100%, 60%);
+}
+
+#authentication-message.active {
+  opacity: 1;
 }
 
 label {
@@ -70,28 +92,29 @@ h1 {
   margin-bottom: 0.5em;
 }
 
-input, button {
-  position: relative;
-  top: 2px;
-
+input {
   -webkit-user-select: text;
 
-  height: 40px;
-
-  font-size: 30px;
+  height: 32px;
+  font-size: 20px;
 
   border: 2px solid hsl(0, 0%, 25%);
-  background-color: hsl(0, 0%, 48%);
-  
-  -webkit-transition: all 0.5s;
-  -webkit-transition-timing-function: ease-in-out;
+  background-color: hsl(0, 0%, 58%);
 
-  border-radius: 10px;
+  padding-left: 6px;
+  padding-right: 6px;
+  
+  -webkit-transition: all 0.3s;
+
+  border-radius: 7px;
 }
 
-input[type="text"]:focus, input[type="password"]:focus {
-  border-color: 2px solid hsl(0, 0%, 25%);
-  background-color: hsl(0, 0%, 48%);
+input::-webkit-input-placeholder {
+  position: relative;
+  top: -2px;
+
+  color: hsl(0, 0%, 88%);
+  font-family: 'Terminal Dosis';
 }
 
 #background {
@@ -99,86 +122,100 @@ input[type="text"]:focus, input[type="password"]:focus {
   position: absolute;
 }
 
-#user-list {
-  width: 500px;
+#user-list, #password-container {
+  position: absolute;
 
-  border-radius: 20px;
-  padding: 10px;
+  top: 50%;
+  left: 0;
+  right: 0;
 
-  margin-left: auto;
-  margin-right: auto;
+  height: 150px;
+
+  margin-top: -75px;
+  text-align: center;
+
+  -webkit-transition: all 0.3s;
+}
+
+#password-container {
+  height: 40px;
+
+  margin-top: 100px;
+}
+
+#password {
+  position: relative;
 }
 
 .user {
-  line-height: 37px;
+  position: relative;
+  display: inline-block;
 
-  overflow: hidden;
+  text-align: center;
+  height: 130px;
+  width: 130px;
+  padding: 10px;
 
-  border-radius: 20px;
-  height: 60px;
-
-  background-color: hsl(0, 0%, 7%);
-  -webkit-transition: all 0.5s;
-
-  cursor: pointer;
+  -webkit-transition: all 0.3s;
 
   opacity: 0.7;
 }
 
-.user:not(:last-child) {
-  margin-bottom: 10px;
+.hidden {
+  opacity: 0.03;
 }
 
-.user:hover {
+#password-container.hidden {
+  opacity: 0;
+}
+
+.user:not(.hidden):hover {
   opacity: 0.85;
+  cursor: pointer;
 }
 
 .user.active {
-  height: 145px;
   opacity: 1;
 }
 
-.user img {
+.user-name {
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Terminal Dosis';
+
+  color: white;
+}
+
+.user-face {
   display: none;
 }
 
-.user .user-name {
-  margin-top: 13px;
+.logged-in {
+  margin-bottom: -19px;
+}
+
+.bubble {
+  display: block;
+
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 5px;
-  font-size: 50px;
-  font-family: 'Terminal Dosis';
-  color: white;
-  font-weight: 600;
-}
 
-.user .user-logged-in {
-  display: inline-block;
-
-  font-size: 20px;
-  color: hsl(0, 0%, 70%);
-  font-style: italic;
-  vertical-align: middle;
-
-  margin-left: 10px;
-}
-
-.user .left-bubble {
-  float: left;
+  width: 96px;
+  height: 96px;
   
-  display: inline-block;
-  width: 40px;
-  height: 100%;
   background-color: hsl(175, 29%, 61%);
+  overflow: hidden;
 
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+  border-radius: 100%;
 
-  margin-right: 10px;
   -webkit-transition: all 0.5s;
   -webkit-transition-timing-function: ease-in-out;
 }
 
 #controls {
+  display: none;
+
   position: absolute;
   bottom: 0;
   left: 0;
