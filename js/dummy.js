@@ -2463,7 +2463,27 @@ if (!('lightdm' in window)) {
 	{
 	"language":"en_US.utf8",
 	"image":"/home/user2/.face",
-	"display_name":"Nikita Nikishin",
+	"display_name":"Test User",
+	"name":"nikita",
+	"session":"default",
+	"real_name":"Nikita Nikishin",
+	"layout":null,
+	"logged_in":false
+	},
+		{
+	"language":"en_US.utf8",
+	"image":"/home/user2/.face",
+	"display_name":"Le Test User",
+	"name":"nikita",
+	"session":"default",
+	"real_name":"Nikita Nikishin",
+	"layout":null,
+	"logged_in":false
+	},
+		{
+	"language":"en_US.utf8",
+	"image":"/home/user2/.face",
+	"display_name":"Test User",
 	"name":"nikita",
 	"session":"default",
 	"real_name":"Nikita Nikishin",

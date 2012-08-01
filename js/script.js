@@ -1,9 +1,22 @@
 $(document).ready(function() {
+  var authenticating = false;
+
   window.authentication_complete = function () {
+    authenticating = false;
+    $('#password').removeAttr('disabled');
+
     if (lightdm.is_authenticated) {
       lightdm.login(lightdm.authentication_user, lightdm.default_session);
     } else {
-      $('.user.active label').text('Invalid password, please try again')
+      $('#authentication-message').removeClass('active');
+
+      setTimeout(function() {
+        $('#authentication-message').text('Invalid password').addClass('active error');
+
+        setTimeout(function() {
+          $('#authentication-message').removeClass('active error');
+        }, 3000);
+      }, 300);
     }
   }
 
@@ -21,22 +34,14 @@ $(document).ready(function() {
     var $entry = $('<div />', {class: 'user'});
 
     $entry.data('user', user);
-    user.background = '/home/' + user.name + '/.background';
     
-    if (!user.image.length) {
-      user.image = 'images/stock_person.svg';
-    }
-
-    $('<div />', {class: 'left-bubble'}).css({backgroundColor: palette[i]}).appendTo($entry);
-    $('<img />', {src: user.image, class: 'user-image'}).appendTo($entry);
+    var $bubble = $('<div />', {class: 'bubble'}).css({backgroundColor: palette[i]}).appendTo($entry);
     var $username = $('<div />', {class: 'user-name'}).text(user.display_name).appendTo($entry);
 
     if (user.logged_in) {
-      $('<span />', {class: 'user-logged-in'}).text('(logged in)').appendTo($username);
+      $('<span />', {class: 'user-logged-in'}).text('logged in').appendTo($entry);
+      $entry.addClass('logged-in');
     }
-
-    $('<label />').text('Enter your password').appendTo($entry);
-    $('<input />', {type: 'password'}).appendTo($entry);
 
     $entry.appendTo($user_list);
   }
@@ -53,44 +58,118 @@ $(document).ready(function() {
     return lightdm[$(this).text().toLowerCase()]();
   })
 
-  $('.user .user-name, .user .left-bubble').on('click', function(e) {
-    var $this = $(this).parents('.user');
+  $('.user').on('click', function(event, navigate) {
+    if (authenticating) return false;
+
+    var navigate = typeof navigate === 'undefined' ? 0 : navigate;
+
+    var $this = $(this);
     var user = $this.data('user');
 
     lightdm.cancel_timed_login();
     lightdm.start_authentication(user.name);
 
-    if ($this.hasClass('active')) {
-      setTimeout(function() {
-        $this.find('input').val('');
-        $this.find('label').text('Enter your password')
-      }, 300);
+    if (navigate == 0 && $this.hasClass('active') && $('#password-container').hasClass('hidden')) {
+      $('#password-container').removeClass('hidden');
 
-      return $this.removeClass('active');
+      return false;
     }
 
-    $this.addClass('active').siblings().each(function() {
-      $(this).removeClass('active');
-      $(this).find('input').val('');
-      $(this).find('label').text('Enter your password');
+    if (navigate == 3 && !$('#password-container').hasClass('hidden')) {
+      $('#password-container').addClass('hidden');
+
+      return false;
+    }
+
+    if (navigate != 2 && $this.hasClass('active')) {
+      if (navigate != 1 && !$('#password-container').hasClass('hidden')) {
+        $('#password-container').addClass('hidden');
+      }
+
+      $('#user-list').css({
+        left: 0,
+        right: 0
+      });
+
+      $this.parent().children().removeClass('hidden active');
+
+      return false;
+    }
+
+    var index = $this.index() + 1;
+    var total = $this.siblings().length + 1;
+    var shift = ((total + 1) / 2 - index) * $this.outerWidth(true);
+
+    $('#user-list').css({
+      left: shift,
+      right: -shift
     });
 
-    setTimeout(function() {
-      $this.find('input').focus();
-    }, 300);
+    $this.parent().children().addClass('hidden').removeClass('active');
+    $this.addClass('active').removeClass('hidden');
+
+    if (navigate != 1) {
+      $('#password-container').removeClass('hidden').find('input').val('').focus();
+    }
   });
 
-  $('.user input').on('keyup', function(e) {
+  $('#password').on('keyup', function(e) {
     if (e.keyCode != 13) {
       return;
     }
 
-    var $this = $(this).parents('.user');
-    var user = $this.data('user');
-    
     lightdm.provide_secret($(this).val());
 
-    $this.find('label').text('Authenticating...');
+    authenticating = true;
+
+    $('#authentication-message').text('Authenticating...').addClass('active');
+    $('#password').attr('disabled', 'disabled');
+  });
+
+  $(document).on('keydown mousewheel', function(e) {
+    if (authenticating) return false;
+    
+    var arrow = {left: 37, up: 38, right: 39, down: 40};
+    var users = $('#user-list .user');
+    var current = $('#user-list .active');
+    var index = Math.max(current.index(), 0);
+    
+    switch (e.originalEvent.wheelDelta || e.which) {
+      case 120:
+      case arrow.left:
+        if (current.length == 0) {
+          index = 1;
+        } else if (index == 0) {
+          break;
+        }
+
+        users.eq(index - 1).trigger('click', [1]);
+        $('#password').val('');
+        break;
+
+      case -120:
+      case arrow.right:
+        if (index == users.length - 1) break;
+
+        users.eq(index + 1).trigger('click', [1]);
+        $('#password').val('');
+        break;
+
+      case arrow.up:
+        if (current.length == 0) break;
+
+        current.trigger('click', [3]);
+        break;
+
+      case arrow.down:
+        if (current.length == 0) {
+          users.eq(index).trigger('click', [1]);
+        } else {
+          users.eq(index).trigger('click', [2]);
+        }
+        
+        break;
+    }
   });
 
   /*
