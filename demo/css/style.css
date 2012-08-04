@@ -1,0 +1,257 @@
+@font-face {
+  font-family: 'Terminal Dosis';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Dosis Regular'), local('Dosis-Regular'), url('../fonts/terminal-dosis-regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Varela Round';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Varela Round'), local('VarelaRound-Regular'), url('../fonts/varela-round.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Terminal Dosis';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Dosis SemiBold'), local('Dosis-SemiBold'), url('../fonts/terminal-dosis-semibold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Terminal Dosis';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Dosis Bold'), local('Dosis-Bold'), url('../fonts/terminal-dosis-bold.woff') format('woff');
+}
+
+
+* {
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+canvas {
+  display: none;
+}
+
+input[type="text"], input[type="password"] {
+  outline: none;
+}
+
+html {
+  height: 100%;
+  background-color: hsl(0, 0%, 13%);
+}
+
+body {
+  color: hsl(0, 0%, 53%);
+
+  opacity: 0;
+
+  font: 16px/1.625em 'Varela Round';
+}
+
+#user-list-wrapper {
+  position: absolute;
+  
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  overflow: hidden;
+}
+
+#authentication-message {
+  opacity: 0;
+  -webkit-transition: all 0.3s;
+}
+
+#authentication-message.error {
+  color: hsl(359, 100%, 60%);
+}
+
+#authentication-message.active {
+  opacity: 1;
+}
+
+label {
+  font-size: 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-align: center;
+
+  font-size: 50px;
+  font-family: 'Terminal Dosis';
+  color: white;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 72px;
+  line-height: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+input {
+  -webkit-user-select: text;
+
+  height: 32px;
+  font-size: 20px;
+
+  border: 2px solid hsl(0, 0%, 25%);
+  background-color: hsl(0, 0%, 58%);
+
+  padding-left: 6px;
+  padding-right: 6px;
+  
+  -webkit-transition: all 0.3s;
+
+  border-radius: 7px;
+}
+
+input::-webkit-input-placeholder {
+  position: relative;
+  top: -2px;
+
+  color: hsl(0, 0%, 88%);
+  font-family: 'Terminal Dosis';
+}
+
+#background {
+  z-index: -1;
+  position: absolute;
+}
+
+#user-list, #password-container {
+  position: absolute;
+
+  top: 50%;
+  left: 0;
+  right: 0;
+
+  height: 150px;
+
+  margin-top: -75px;
+  text-align: center;
+
+  -webkit-transition: all 0.3s;
+}
+
+#password-container {
+  height: 40px;
+
+  margin-top: 100px;
+}
+
+#password {
+  position: relative;
+}
+
+.user {
+  position: relative;
+  display: inline-block;
+
+  text-align: center;
+  height: 130px;
+  width: 130px;
+  padding: 10px;
+
+  -webkit-transition: all 0.3s;
+
+  opacity: 0.7;
+}
+
+.hidden {
+  opacity: 0.03;
+}
+
+#password-container.hidden {
+  opacity: 0;
+}
+
+.user:not(.hidden):hover {
+  opacity: 0.85;
+  cursor: pointer;
+}
+
+.user.active {
+  opacity: 1;
+}
+
+.user-name {
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Terminal Dosis';
+
+  color: white;
+}
+
+.user-face {
+  display: none;
+}
+
+.logged-in {
+  margin-bottom: -19px;
+}
+
+.bubble {
+  display: block;
+
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5px;
+
+  width: 96px;
+  height: 96px;
+  
+  background-color: hsl(175, 29%, 61%);
+  overflow: hidden;
+
+  border-radius: 100%;
+
+  -webkit-transition: all 0.5s;
+  -webkit-transition-timing-function: ease-in-out;
+}
+
+#controls {
+  display: none;
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  overflow: hidden;
+  text-align: center;
+}
+
+.system-button {
+  position: relative;
+  bottom: -10px;
+
+  opacity: 0.65;
+
+  height: 35px;
+  display: inline-block;
+  
+  color: black;
+  cursor: pointer;
+
+  padding: 10px;
+
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+
+  margin-right: 10px;
+  -webkit-transition: all 0.3s;
+  -webkit-transition-timing-function: ease-in-out;
+}
+
+.system-button:hover {
+  bottom: 0;
+  opacity: 1;
+}
