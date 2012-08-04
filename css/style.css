@@ -36,6 +36,10 @@ canvas {
   display: none;
 }
 
+input[type="text"], input[type="password"] {
+  outline: none;
+}
+
 html {
   height: 100%;
   background-color: hsl(0, 0%, 13%);

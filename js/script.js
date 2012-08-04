@@ -122,7 +122,7 @@ $(document).ready(function() {
 
     authenticating = true;
 
-    $('#authentication-message').text('Authenticating...').addClass('active');
+    $('#authentication-message').removeClass('error').text('Authenticating...').addClass('active');
     $('#password').attr('disabled', 'disabled');
   });
 
