@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Bevel : A minimal theme for the LightDM Webkit greeter" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Bevel</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/Blender3D/Bevel">View on GitHub</a>
+
+          <h1 id="project_title">Bevel</h1>
+          <h2 id="project_tagline">A minimal theme for the LightDM Webkit greeter</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/Blender3D/Bevel/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/Blender3D/Bevel/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>Demo</h2>
+
+<p>LightDM's Webkit greeter is basically a stripped-down web browser, so you can try Bevel from within your own browser. Note that Bevel will work best in Chrome and Safari, but I'll try to keep support for Firefox.</p>
+
+<p><a href="Demo"><img src="https://github.com/Blender3D/Bevel/raw/master/images/screenshots/1.png" alt="Login Screen"></a></p>
+
+<h2>Installing the Webkit greeter</h2>
+
+<p>You will first need the <code>lightdm</code> and <code>lightdm-webkit-greeter</code> packages. Xephyr is used for testing LightDM themes while logged in, so I'd install that as well</p>
+
+<h3>Arch Linux</h3>
+
+<p>Both packages can be installed from the AUR:</p>
+
+<pre><code>packer -S lightdm lightdm-webkit-greeter xorg-server-xephyr
+</code></pre>
+
+<p>When building <code>lightdm</code>, edit the <code>PKGBUILD</code> and change line 38 from <code>--with-greeter-session=lightdm-gtk-greeter</code> to <code>--with-greeter-session=lightdm-webkit-greeter</code>.</p>
+
+<p>You'll also have to make the Webkit greeter the default greeter via a symlink:</p>
+
+<pre><code># cd /usr/share/xgreeters/
+# ln -s lightdm-webkit-greeter.desktop default.desktop
+</code></pre>
+
+<h3>Ubuntu</h3>
+
+<p>Both packages <em>seem</em> to be in the default repositories:</p>
+
+<pre><code>sudo apt-get install lightdm lightdm-webkit-greeter xserver-xephyr
+</code></pre>
+
+<h3>Others</h3>
+
+<p>I've only really used Arch and Ubuntu, but I can imagine the instructions for other distros will vary only slightly.</p>
+
+<h2>Installing Bevel</h2>
+
+<p>You first have to edit the LightDM configuration file, which resides in <code>/etc/lightdm/lightdm-webkit-greeter.conf</code>. Change line 13 from <code>webkit-theme=webkit</code> (this might be different for Ubuntu) to <code>webkit-theme=bevel</code>.</p>
+
+<p>Next, you have to clone the repo:</p>
+
+<pre><code># cd /usr/share/lightdm-webkit/themes/
+# git clone https://github.com/Blender3D/Bevel bevel
+</code></pre>
+
+<p>Finally, try out LightDM in test mode:</p>
+
+<pre><code>$ lightdm --test-mode
+</code></pre>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Bevel maintained by <a href="https://github.com/Blender3D">Blender3D</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
