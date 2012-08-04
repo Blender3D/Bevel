@@ -1,6 +1,6 @@
 if (!('lightdm' in window)) {
   window.lightdm = {
-	"timed_login_delay":0,
+	"timed_login_delay":5,
 	"layouts":[
 	{
 	"description":"English (US)",
@@ -2453,40 +2453,40 @@ if (!('lightdm' in window)) {
 	{
 	"language":"en_US.utf8",
 	"image":"/home/user1/.face",
-	"display_name":"John Doe",
-	"name":"jdoe",
+	"display_name":"Lorem Ipsum",
+	"name":"lorem",
 	"session":"default",
-	"real_name":"John Doe",
+	"real_name":"Lorem Ipsum",
 	"layout":null,
 	"logged_in":true
 	},
 	{
 	"language":"en_US.utf8",
 	"image":"/home/user2/.face",
-	"display_name":"Test User",
-	"name":"nikita",
+	"display_name":"Aliquam Non",
+	"name":"aliquam",
 	"session":"default",
-	"real_name":"Blender3D ",
+	"real_name":"Aliquam Non",
 	"layout":null,
 	"logged_in":false
 	},
 		{
 	"language":"en_US.utf8",
 	"image":"/home/user2/.face",
-	"display_name":"Le Test User",
-	"name":"nikita",
+	"display_name":"Aptent Taciti",
+	"name":"aptent",
 	"session":"default",
-	"real_name":"Blender3D ",
+	"real_name":"Aptent Taciti",
 	"layout":null,
 	"logged_in":false
 	},
 		{
 	"language":"en_US.utf8",
 	"image":"/home/user2/.face",
-	"display_name":"Test User",
-	"name":"nikita",
+	"display_name":"Litora Torquent",
+	"name":"litora",
 	"session":"default",
-	"real_name":"Blender3D ",
+	"real_name":"Litora Torquent",
 	"layout":null,
 	"logged_in":false
 	}
@@ -2496,5 +2496,14 @@ if (!('lightdm' in window)) {
 
 	window.lightdm.cancel_timed_login = function() {};
 	window.lightdm.start_authentication = function() {};
-	window.lightdm.provide_secret = function() {};
+	window.lightdm.login = function(user, password) {
+		alert('You have logged in!');
+		window.location = window.location;
+	}
+	window.lightdm.provide_secret = function() {
+		setTimeout(function() {
+			window.lightdm.is_authenticated = Boolean(Math.round(Math.random()));
+			window.authentication_complete()
+		}, 1000);
+	};
 }
