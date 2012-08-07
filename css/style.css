@@ -66,8 +66,8 @@ body {
 
 #authentication-message {
   opacity: 0;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
+  -webkit-transition: all 0.3s cubic-bezier(.24,.59,.46,.93);
+  -moz-transition: all 0.3s cubic-bezier(.24,.59,.46,.93);
 }
 
 #authentication-message.error {
@@ -109,8 +109,8 @@ input {
   padding-left: 6px;
   padding-right: 6px;
   
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
+  -webkit-transition: all 0.3s cubic-bezier(.24,.59,.46,.93);
+  -moz-transition: all 0.3s cubic-bezier(.24,.59,.46,.93);
 
   border-radius: 7px;
 }
@@ -140,8 +140,8 @@ input::-webkit-input-placeholder {
   margin-top: -75px;
   text-align: center;
 
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
+  -webkit-transition: all 0.3s cubic-bezier(.24,.59,.46,.93);
+  -moz-transition: all 0.3s cubic-bezier(.24,.59,.46,.93);
 }
 
 #password-container {
@@ -165,14 +165,15 @@ input::-webkit-input-placeholder {
   width: 130px;
   padding: 10px;
 
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
+  -webkit-transition: all 0.3s cubic-bezier(.24,.59,.46,.93);
+  -moz-transition: all 0.3s cubic-bezier(.24,.59,.46,.93);
 
   opacity: 0.7;
+  cursor: pointer;
 }
 
 .hidden {
-  opacity: 0.03;
+  opacity: 0.25;
 }
 
 #password-container.hidden {
@@ -181,7 +182,14 @@ input::-webkit-input-placeholder {
 
 .user:not(.hidden):hover {
   opacity: 0.85;
-  cursor: pointer;
+}
+
+.user.hidden:hover {
+  opacity: 0.35;
+}
+
+.user.active:hover {
+  opacity: 1.0;
 }
 
 .user.active {
@@ -216,7 +224,7 @@ input::-webkit-input-placeholder {
   border-radius: 100%;
 
   -webkit-transition: all 0.5s;
-  -moz-transition: all 0.3s;
+  -moz-transition: all 0.3s cubic-bezier(.24,.59,.46,.93);
 }
 
 #controls {
@@ -249,8 +257,8 @@ input::-webkit-input-placeholder {
   border-top-right-radius: 20px;
 
   margin-right: 10px;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
+  -webkit-transition: all 0.3s cubic-bezier(.24,.59,.46,.93);
+  -moz-transition: all 0.3s cubic-bezier(.24,.59,.46,.93);
 }
 
 .system-button:hover {
