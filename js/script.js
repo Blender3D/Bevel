@@ -1,189 +1,242 @@
-$(document).ready(function() {
-  var authenticating = false;
+angular.module('bevel', [])
+  .run(function($rootScope) {
+    var arrow = {
+      13: 'keyenter',
+      27: 'keyescape',
+      37: 'arrowleft',
+      38: 'arrowup',
+      39: 'arrowright',
+      40: 'arrowdown'
+    };
 
-  window.authentication_complete = function () {
-    authenticating = false;
-    $('#password').removeAttr('disabled');
-
-    if (lightdm.is_authenticated) {
-      lightdm.login(lightdm.authentication_user, lightdm.default_session);
-    } else {
-      $('#authentication-message').removeClass('active');
-
-      setTimeout(function() {
-        $('#authentication-message').text('Invalid password').addClass('active error');
-
-        setTimeout(function() {
-          $('#authentication-message').removeClass('active error');
-        }, 3000);
-      }, 300);
-    }
-  }
-
-  var $user_list = $('#user-list');
-  var palette = [
-    '#FF6138',
-    '#FFFF9D',
-    '#BEEB9F',
-    '#79BD8F',
-    '#00A388',
-  ];
-
-  for (i in lightdm.users) {
-    var user = lightdm.users[i];
-    var $entry = $('<div />', {class: 'user'});
-
-    $entry.data('user', user);
-    
-    var $bubble = $('<div />', {class: 'bubble'}).css({backgroundColor: palette[i]});
-        if(user.image.length > 0) 
-            $bubble.css({'background-image': 'url('+user.image+')'});
-        $bubble.appendTo($entry);
-    var $username = $('<div />', {class: 'user-name'}).text(user.display_name).appendTo($entry);
-
-    if (user.logged_in) {
-      $('<span />', {class: 'user-logged-in'}).text('logged in').appendTo($entry);
-      $entry.addClass('logged-in');
-    }
-
-    $entry.appendTo($user_list);
-  }
-
-  $('.system-button').each(function(index) {
-    $(this).css('background-color', palette[index]);
-
-    if (!lightdm['can_' + $(this).text().toLowerCase()]) {
-      $(this).hide();
-    }
-  });
-
-  $('.system-button').on('click', function() {
-    return lightdm[$(this).text().toLowerCase()]();
-  })
-
-  $('.user').on('click', function(event, navigate) {
-    if (authenticating) return false;
-
-    var navigate = typeof navigate === 'undefined' ? 0 : navigate;
-
-    var $this = $(this);
-    var user = $this.data('user');
-
-    lightdm.cancel_timed_login();
-    lightdm.start_authentication(user.name);
-
-    if (navigate == 0 && $this.hasClass('active') && $('#password-container').hasClass('hidden')) {
-      $('#password-container').removeClass('hidden');
-
-      return false;
-    }
-
-    if (navigate == 3 && !$('#password-container').hasClass('hidden')) {
-      $('#password-container').addClass('hidden');
-
-      return false;
-    }
-
-    if (navigate != 2 && $this.hasClass('active')) {
-      if (navigate != 1 && !$('#password-container').hasClass('hidden')) {
-        $('#password-container').addClass('hidden');
-      }
-
-      $('#user-list').css({
-        left: 0,
-        right: 0
+    $(document).on('wheel', function(event) {
+      var delta = event.originalEvent.wheelDelta || event.which;
+      delta && $rootScope.$apply(function() {
+        $rootScope.$broadcast(delta > 0 ? 'scrollup' : 'scrolldown');
       });
-
-      $this.parent().children().removeClass('hidden active');
-
-      return false;
-    }
-
-    var index = $this.index() + 1;
-    var total = $this.siblings().length + 1;
-    var shift = ((total + 1) / 2 - index) * $this.outerWidth(true);
-
-    $('#user-list').css({
-      left: shift,
-      right: -shift
     });
 
-    $this.parent().children().addClass('hidden').removeClass('active');
-    $this.addClass('active').removeClass('hidden');
+    $(document).on('keydown', function(event) {
+      var name = arrow[event.which];
+      name && $rootScope.$apply(function() {
+        $rootScope.$broadcast(name);
+      });
+    });
+  })
+  .directive('contentShift', function() {
+    function link(scope, element, attrs) {
+      function update() {
+        var when = attrs.contentWhen ? scope.$eval(attrs.contentWhen) : true;
 
-    if (navigate != 1) {
-      $('#password-container').removeClass('hidden').find('input').val('').focus();
-    }
-  });
-
-  $('#password').on('keyup', function(e) {
-    if (e.keyCode != 13) {
-      return;
-    }
-
-    lightdm.provide_secret($(this).val());
-
-    authenticating = true;
-
-    $('#authentication-message').removeClass('error').text('Authenticating...').addClass('active');
-    $('#password').attr('disabled', 'disabled');
-  });
-
-  $(document).on('keydown mousewheel', function(e) {
-    if (authenticating) return false;
-    
-    var arrow = {left: 37, up: 38, right: 39, down: 40};
-    var users = $('#user-list .user');
-    var current = $('#user-list .active');
-    var index = Math.max(current.index(), 0);
-    
-    switch (e.originalEvent.wheelDelta || e.which) {
-      case 120:
-      case arrow.left:
-        if (current.length == 0) {
-          index = 1;
-        } else if (index == 0) {
-          break;
+        if (!when) {
+          return $(element).css({
+            left: 0,
+            right: 0
+          });
         }
 
-        users.eq(index - 1).trigger('click', [1]);
-        $('#password').val('');
-        break;
+        var shift = scope.$eval(attrs.contentShift);
 
-      case -120:
-      case arrow.right:
-        if (index == users.length - 1) break;
+        var children = $(element).children();
+        var total = children.length, totalWidth = 0;
+        children.each(function() {
+          totalWidth += $(this).outerWidth(true);
+        });
 
-        users.eq(index + 1).trigger('click', [1]);
-        $('#password').val('');
-        break;
+        var width = totalWidth / total;
+        var offset = ((total / 2) - shift - 0.5) * width;
+        $(element).css({
+          left: offset,
+          right: -offset
+        });
+      }
 
-      case arrow.up:
-        if (current.length == 0) break;
-
-        current.trigger('click', [3]);
-        break;
-
-      case arrow.down:
-        if (current.length == 0) {
-          users.eq(index).trigger('click', [1]);
-        } else {
-          users.eq(index).trigger('click', [2]);
-        }
-        
-        break;
+      attrs.contentWhen && scope.$watch(attrs.contentWhen, update);
+      scope.$watch(attrs.contentShift, update);
+      update();
     }
-  });
 
-  /*
-  var $background = $('<img />', {src: $('.user').eq(0).data('user').background, id: 'background'}).appendTo('body');
-  $background.css({
-    left: ($background.width() - $(window).width()) / 2,
-    top: ($background.height() - $(window).height()) / 2
-  });
-  */
-  
-  $('#hostname').text(lightdm.hostname);
+    return {
+      restrict: 'A',
+      link: link
+    };
+  })
+  .directive('arrowStop', function() {
+    function link(scope, element, attrs) {
+      var arrow = {
+        37: 'arrowleft',
+        // 38: 'arrowup',
+        39: 'arrowright',
+        40: 'arrowdown'
+      };
 
-  $('body').animate({'opacity': '1'});
-});
+      $(element).on('keydown', function(event) {
+        arrow[event.which] && event.stopPropagation();
+      });
+    }
+
+    return {
+      restrict: 'A',
+      link: link
+    };
+  })
+  .directive('focusWhen', function() {
+    function link(scope, element, attrs) {
+      var state = false;
+
+      function update(focus) {
+        // rising edge
+        if (focus && (!state || focus !== state)) {
+          setTimeout(element.focus.bind(element));
+        }
+
+        state = focus;
+      }
+
+      scope.$watch(attrs.focusWhen, update);
+      update(scope.$eval(attrs.focusWhen));
+    }
+
+    return {
+      restrict: 'A',
+      link: link
+    };
+  })
+  .controller('Users', function Users($scope, $timeout) {
+    var palette = [
+      '#FF6138',
+      '#FFFF9D',
+      '#BEEB9F',
+      '#79BD8F',
+      '#00A388'
+    ];
+
+    $scope.secret = '';
+    $scope.authenticating = false;
+    $scope.lightdm = lightdm;
+    $scope.users = lightdm.users.map(function(user, index) {
+      return {
+        active: user.logged_in,
+        color: palette[index % palette.length],
+        image: user.image,
+        name: user.display_name
+      };
+    });
+    $scope.mode = null;
+    $scope.selected = null;
+
+    $scope.authComplete = function() {
+      $scope.authenticating = false;
+
+      if (lightdm.is_authenticated) {
+        lightdm.login(lightdm.authentication_user, lightdm.default_session);
+      } else {
+        $timeout(function() {
+          $scope.invalid = true;
+
+          $timeout(function() {
+            $scope.invalid = false;
+          }, 3000);
+        }, 300);
+      }
+    };
+
+    $scope.submit = function() {
+      lightdm.provide_secret($scope.secret);
+
+      $scope.authenticating = true;
+    };
+
+    $scope.jump = function(index) {
+      if ($scope.authenticating) return false;
+
+      $scope.secret = '';
+
+      if ($scope.mode === 'select' && $scope.selected === index) {
+        $scope.mode = null;
+        $scope.selected = null;
+        return false;
+      }
+
+      if ($scope.mode === 'focus' && $scope.selected === index) {
+        $scope.mode = 'select';
+        return false;
+      }
+
+      $scope.mode || ($scope.mode = 'select');
+      $scope.selected = index;
+    };
+
+    $scope.out = function() {
+      if ($scope.authenticating) return false;
+
+      $scope.secret = '';
+
+      $scope.mode = null;
+      $scope.selected = null;
+    };
+
+    $scope.up = function() {
+      if ($scope.authenticating) return false;
+
+      $scope.secret = '';
+
+      if ($scope.mode === 'select')
+        $scope.mode = 'focus';
+      else if ($scope.mode === 'focus')
+        $scope.out();
+    };
+
+    $scope.down = function() {
+      if ($scope.authenticating) return false;
+
+      $scope.secret = '';
+
+      $scope.selected || ($scope.selected = 0);
+
+      if (!$scope.mode)
+        $scope.mode = 'focus';
+      else if ($scope.mode === 'focus')
+        $scope.mode = 'select';
+    };
+
+    $scope.left = function() {
+      if ($scope.authenticating) return false;
+
+      $scope.secret = '';
+
+      if (!$scope.mode) {
+        $scope.mode = 'focus';
+        $scope.selected = 0;
+      }
+
+      if ($scope.selected <= 0)
+        $scope.selected = $scope.users.length - 1;
+      else
+        $scope.selected--;
+    };
+
+    $scope.right = function() {
+      if ($scope.authenticating) return false;
+
+      $scope.secret = '';
+
+      if (!$scope.mode) {
+        $scope.mode = 'focus';
+        $scope.selected = 0;
+      } else if ($scope.selected >= $scope.users.length - 1) {
+        $scope.selected = 0;
+      } else {
+        $scope.selected++;
+      }
+    };
+
+    $scope.$on('arrowup', $scope.up);
+    $scope.$on('keyenter', $scope.down);
+    $scope.$on('keyescape', $scope.out);
+    $scope.$on('scrollup', $scope.left);
+    $scope.$on('arrowleft', $scope.left);
+    $scope.$on('arrowdown', $scope.down);
+    $scope.$on('scrolldown', $scope.right);
+    $scope.$on('arrowright', $scope.right);
+  });

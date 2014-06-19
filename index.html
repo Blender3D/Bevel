@@ -1,31 +1,43 @@
-<html>
+<!DOCTYPE html>
+<html ng-app="bevel">
   <head>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery.mousewheel.js"></script>
-    <script src="js/quantize.js"></script>
-    <script src="js/color-thief.js"></script>
-    <script src="js/dummy.js"></script>
-    <script src="js/script.js"></script>
+    <meta charset="utf-8">
+    <title>Bevel Lightdm</title>
 
-    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet">
   </head>
 
-  <body>
-    <!--<h1>Login to <span id="hostname">hostname</span></h1>-->
+  <body ng-controller="Users" ng-cloak>
     <div id="user-list-wrapper">
-      <div id="user-list" data-shift="0"></div>
+      <div id="user-list" content-when="mode" content-shift="selected" content-total="users.length">
+        <div class="user" ng-click="jump($index)" ng-repeat="user in users" ng-class="{'logged-in': user.active, active: selected === $index, hidden: mode &amp;&amp; selected !== $index}">
+          <div class="bubble" ng-style="{'background-color': user.color, 'background-image': user.image ? 'url(' + user.image + ')' : null}"></div>
+          <div class="user-name">{{user.name}}</div>
+          <span ng-if="user.active" class="user-logged-in">logged in</span>
+        </div>
+      </div>
     </div>
 
-    <div id="password-container" class="hidden">
-      <input id="password" type="password" />
-      <div id="authentication-message">Invalid password, please try again</div>
+    <div id="password-container" ng-show="mode === 'select'">
+      <form ng-submit="submit()">
+        <input id="password" ng-model="secret" type="password" ng-disabled="authenticating" focus-when="mode === 'select' &amp;&amp; !authenticating &amp;&amp; (selected + 1)" arrow-stop>
+        <div id="authentication-message" ng-class="{'active': authenticating || invalid, 'error': invalid}">
+          <span ng-show="authenticating">Authenticating...</span>
+          <span ng-show="invalid">Invalid password</span>
+        </div>
+      </form>
     </div>
 
     <div id="controls">
-      <div class="system-button">Shutdown</div>
-      <div class="system-button">Restart</div>
-      <div class="system-button">Hibernate</div>
-      <div class="system-button">Suspend</div>
+      <div class="system-button" ng-if="lightdm.can_shutdown" ng-click="lightdm.shutdown()">Shutdown</div>
+      <div class="system-button" ng-if="lightdm.can_restart" ng-click="lightdm.restart()">Restart</div>
+      <div class="system-button" ng-if="lightdm.can_hibernate" ng-click="lightdm.hibernate()">Hibernate</div>
+      <div class="system-button" ng-if="lightdm.can_suspend" ng-click="lightdm.suspend()">Suspend</div>
     </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/dummy.js"></script>
+    <script src="js/script.js"></script>
   </body>
 </html>

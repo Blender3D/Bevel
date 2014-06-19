@@ -26,10 +26,33 @@
   src: local('Dosis Bold'), local('Dosis-Bold'), url('../fonts/terminal-dosis-bold.woff') format('woff');
 }
 
+@-webkit-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
 
 * {
   -webkit-user-select: none;
   -webkit-user-drag: none;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
 }
 
 canvas {
@@ -48,14 +71,21 @@ html {
 body {
   color: hsl(0, 0%, 53%);
 
-  opacity: 0;
-
   font: 16px/1.625em 'Varela Round';
+
+  -webkit-animation-name: fadein;
+  -webkit-animation-count: 1;
+  -webkit-animation-duration: 400ms;
+  -webkit-animation-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  animation-name: fadein;
+  animation-count: 1;
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
 }
 
 #user-list-wrapper {
   position: absolute;
-  
+
   top: 0;
   left: 0;
   right: 0;
@@ -108,7 +138,7 @@ input {
 
   padding-left: 6px;
   padding-right: 6px;
-  
+
   -webkit-transition: all 0.3s cubic-bezier(.24,.59,.46,.93);
   -moz-transition: all 0.3s cubic-bezier(.24,.59,.46,.93);
 
@@ -176,10 +206,6 @@ input::-webkit-input-placeholder {
   opacity: 0.25;
 }
 
-#password-container.hidden {
-  opacity: 0;
-}
-
 .user:not(.hidden):hover {
   opacity: 0.85;
 }
@@ -217,7 +243,7 @@ input::-webkit-input-placeholder {
 
   width: 96px;
   height: 96px;
-  
+
   background-color: hsl(175, 29%, 61%);
   overflow: hidden;
 
@@ -247,7 +273,7 @@ input::-webkit-input-placeholder {
 
   height: 35px;
   display: inline-block;
-  
+
   color: black;
   cursor: pointer;
 
