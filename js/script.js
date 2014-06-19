@@ -22,6 +22,15 @@ angular.module('bevel', [])
         $rootScope.$broadcast(name);
       });
     });
+
+    window.authentication_complete = (function(prev) {
+      return function() {
+        $rootScope.$apply(function() {
+          $rootScope.$broadcast('authComplete');
+        });
+        return typeof prev === 'function' && prev.apply(this, arguments);
+      };
+    })(window.authentication_complete);
   })
   .directive('contentShift', function() {
     function link(scope, element, attrs) {
@@ -116,6 +125,7 @@ angular.module('bevel', [])
     $scope.lightdm = lightdm;
     $scope.users = lightdm.users.map(function(user, index) {
       return {
+        user: user,
         active: user.logged_in,
         color: palette[index % palette.length],
         image: user.image,
@@ -125,7 +135,7 @@ angular.module('bevel', [])
     $scope.mode = null;
     $scope.selected = null;
 
-    $scope.authComplete = function() {
+    $scope.$on('authComplete', function() {
       $scope.authenticating = false;
 
       if (lightdm.is_authenticated) {
@@ -139,7 +149,7 @@ angular.module('bevel', [])
           }, 3000);
         }, 300);
       }
-    };
+    });
 
     $scope.submit = function() {
       lightdm.provide_secret($scope.secret);
@@ -155,16 +165,15 @@ angular.module('bevel', [])
       if ($scope.mode === 'select' && $scope.selected === index) {
         $scope.mode = null;
         $scope.selected = null;
-        return false;
-      }
-
-      if ($scope.mode === 'focus' && $scope.selected === index) {
+      } else if ($scope.mode === 'focus' && $scope.selected === index) {
         $scope.mode = 'select';
-        return false;
+      } else {
+        $scope.mode || ($scope.mode = 'select');
+        $scope.selected = index;
       }
 
-      $scope.mode || ($scope.mode = 'select');
-      $scope.selected = index;
+      lightdm.cancel_timed_login();
+      lightdm.start_authentication($scope.users[$scope.selected].user.name);
     };
 
     $scope.out = function() {
