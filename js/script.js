@@ -182,8 +182,6 @@ $(document).ready(function() {
     top: ($background.height() - $(window).height()) / 2
   });
   */
-  
-  $('#hostname').text(lightdm.hostname);
 
   $('body').animate({'opacity': '1'});
 });
