@@ -175,13 +175,5 @@ $(document).ready(function() {
     }
   });
 
-  /*
-  var $background = $('<img />', {src: $('.user').eq(0).data('user').background, id: 'background'}).appendTo('body');
-  $background.css({
-    left: ($background.width() - $(window).width()) / 2,
-    top: ($background.height() - $(window).height()) / 2
-  });
-  */
-
   $('body').animate({'opacity': '1'});
 });
