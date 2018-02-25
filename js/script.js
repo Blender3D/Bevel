@@ -36,8 +36,10 @@ $(document).ready(function() {
     $entry.data('user', user);
     
     var $bubble = $('<div />', {class: 'bubble'}).css({backgroundColor: palette[i]});
-        if(user.image.length > 0) 
+    if(user.image) {   
+    if(user.image.length > 0) 
             $bubble.css({'background-image': 'url('+user.image+')'});
+    }
         $bubble.appendTo($entry);
     var $username = $('<div />', {class: 'user-name'}).text(user.display_name).appendTo($entry);
 
